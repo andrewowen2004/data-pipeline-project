@@ -4,8 +4,8 @@
 # Created by Andrew Owen on 2025-06-05.
 # 
 
-import requests
-from requests.auth import HTTPBasicAuth
+import requests; from requests.auth import HTTPBasicAuth
+
 
 # PayPal sandbox OAuth URL
 oauth_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
