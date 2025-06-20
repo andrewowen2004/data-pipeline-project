@@ -1,3 +1,4 @@
-SELECT COUNT(transaction_id)
+SELECT subject, COUNT(*) AS transaction_count
 FROM transactions
-WHERE amount < 35
+GROUP BY subject
+ORDER BY transaction_count DESC;

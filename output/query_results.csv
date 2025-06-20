@@ -1,2 +1,7 @@
-COUNT(transaction_id)
-212
+subject,transaction_count
+Software License,691
+Product Sale,649
+Training Program,643
+Hardware Purchase,633
+Subscription Fee,629
+Consulting Services,605
