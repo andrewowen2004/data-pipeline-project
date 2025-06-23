@@ -2,9 +2,7 @@ import sqlite3
 import random
 from datetime import datetime, timedelta
 
-# Your custom data generation logic, no direct Faker used except for date if you want (you can add if needed)
-
-# Configuration
+# Config
 NUM_ROWS = 3850
 CURRENCY = "USD"
 STATUS = "S"
@@ -18,7 +16,6 @@ SUBJECTS = {
 }
 NUM_FRAUDS = random.randint(3, 7)
 
-# Date range: June 1, 2025 to now
 start_date = datetime(2025, 6, 1)
 end_date = datetime.now()
 
@@ -30,11 +27,9 @@ def random_date(start, end):
 def generate_transaction_id():
     return ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=17))
 
-# Connect to SQLite DB (or create it)
 conn = sqlite3.connect('../data/transactions.db')
 cursor = conn.cursor()
 
-# Create table with matching columns
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS transactions (
     transaction_id TEXT PRIMARY KEY,
@@ -64,7 +59,7 @@ for _ in range(NUM_ROWS - NUM_FRAUDS):
     subject = random.choice(list(SUBJECTS.keys()))
     mean, std_dev = SUBJECTS[subject]
     amount = round(random.gauss(mean, std_dev), 2)
-    amount = max(amount, 1.00)  # Prevent negative/zero
+    amount = max(amount, 1.00) 
     cursor.execute('''
         INSERT INTO transactions (transaction_id, date, amount, currency, status, subject)
         VALUES (?, ?, ?, ?, ?, ?)
