@@ -32,12 +32,8 @@ async def paypal_webhook(request: Request):
 
     supabase.table("paypal_webhooks").insert({
         "event_id": payload.get("id"),
-        "event_type": payload.get("event_type"),
-        "summary": payload.get("summary", ""),
         "amount": amount,
-        "currency": currency,
         "transaction_time": transaction_time,
-        "raw": payload
     }).execute()
 
     return {"status": "received"}

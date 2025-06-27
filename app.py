@@ -9,9 +9,9 @@ import os, json
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-TABLE_NAME = "paypal_webhooks"                        # Replace with your table name
+TABLE_NAME = "paypal_webhooks"                     
 
-REFRESH_INTERVAL_SEC = 1  # ⏱️ Hard-coded refresh interval in seconds
+REFRESH_INTERVAL_SEC = 1
 
 # --- DATA FETCH FUNCTION ---
 def fetch_data():
@@ -43,6 +43,7 @@ st.title("📬 Live PayPal Transactions")
 st.caption(f"Refreshing every {REFRESH_INTERVAL_SEC} seconds...")
 
 # --- DISPLAY DATA ---
+# --- DISPLAY DATA ---
 df = fetch_data()
 
 if df.empty:
@@ -51,7 +52,12 @@ else:
     if "timestamp" in df.columns:
         df = df.sort_values("timestamp", ascending=False)
 
-    st.dataframe(df, use_container_width=True)
+    # ✅ Select only specific columns to display
+    selected_columns = ["id", "amount", "transaction_time"]  # Replace with your actual column names
+    df_to_display = df[selected_columns]  # This line filters the DataFrame
+
+    st.dataframe(df_to_display, use_container_width=True)
+
 
 # --- AUTO-REFRESH LOOP ---
 # Wait and rerun the app
