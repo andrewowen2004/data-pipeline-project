@@ -3,9 +3,12 @@ import pandas as pd
 import requests
 import time
 from streamlit_autorefresh import st_autorefresh
-# --- CONFIGURATION ---
-SUPABASE_URL = "https://uiirqfsxkahsfdhrdrfu.supabase.co"  # Replace with your project URL
-SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaXJxZnN4a2Foc2ZkaHJkcmZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDgwMzA2NSwiZXhwIjoyMDY2Mzc5MDY1fQ.8uRoQ2Lgq7Kfd1IUW-kcz0pqxbWt4xvkieB22Tmypsc"
+from dotenv import load_dotenv
+import os, json
+
+load_dotenv()
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "paypal_webhooks"                        # Replace with your table name
 
 REFRESH_INTERVAL_SEC = 1  # ⏱️ Hard-coded refresh interval in seconds
@@ -14,8 +17,8 @@ REFRESH_INTERVAL_SEC = 1  # ⏱️ Hard-coded refresh interval in seconds
 def fetch_data():
     url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?select=*"
     headers = {
-        "apikey": SUPABASE_API_KEY,
-        "Authorization": f"Bearer {SUPABASE_API_KEY}"
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}"
     }
     try:
         response = requests.get(url, headers=headers)
