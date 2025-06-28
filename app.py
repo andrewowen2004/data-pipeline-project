@@ -63,3 +63,5 @@ else:
 # Wait and rerun the app
 REFRESH_INTERVAL_MS = REFRESH_INTERVAL_SEC * 1000
 st_autorefresh(interval=REFRESH_INTERVAL_MS, limit=None, key="datarefresh")
+
+#now it doesnt seem to be uodating in nrt??? to much data???
