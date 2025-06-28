@@ -31,7 +31,6 @@ async def paypal_webhook(request: Request):
     print(f"Parsed amount: {amount}, currency: {currency}, transaction_time: {transaction_time}")
 
     supabase.table("paypal_webhooks").insert({
-        "event_id": payload.get("id"),
         "amount": amount,
         "transaction_time": transaction_time,
     }).execute()
