@@ -4,28 +4,29 @@ import requests
 import time
 from streamlit_autorefresh import st_autorefresh
 from dotenv import load_dotenv
-import os, json
+import os
 
+# --- ENV SETUP ---
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-TABLE_NAME = "paypal_webhooks"                     
-
+TABLE_NAME = "paypal_webhooks"
 REFRESH_INTERVAL_SEC = 1
 
-# --- DATA FETCH FUNCTION ---
+# --- FETCH DATA FUNCTION ---
 def fetch_data():
     url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?select=*"
     headers = {
         "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}"
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Cache-Control": "no-cache"
     }
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
 
-        # Handle empty or single dict response
         if not data:
             return pd.DataFrame()
         if isinstance(data, dict):
@@ -37,31 +38,55 @@ def fetch_data():
         st.error(f"❌ Error fetching data from Supabase:\n{e}")
         return pd.DataFrame()
 
-# --- UI SETUP ---
+# --- STREAMLIT CONFIG ---
 st.set_page_config(page_title="Live PayPal Dashboard", layout="wide")
-st.title("📬 Live PayPal Transactions")
-st.caption(f"Refreshing every {REFRESH_INTERVAL_SEC} seconds...")
+st.title("💸 Live PayPal Transactions")
+st.caption(f"🔁 Auto-refreshing every {REFRESH_INTERVAL_SEC} seconds...")
 
-# --- DISPLAY DATA ---
-# --- DISPLAY DATA ---
+# --- FETCH AND DISPLAY DATA ---
 df = fetch_data()
 
 if df.empty:
-    st.warning("No transactions found yet.")
+    st.warning("⚠️ No transactions found yet.")
 else:
-    if "timestamp" in df.columns:
-        df = df.sort_values("timestamp", ascending=False)
+    if "transaction_time" in df.columns:
+        df["transaction_time"] = pd.to_datetime(df["transaction_time"], errors='coerce')
 
-    # ✅ Select only specific columns to display
-    selected_columns = ["id", "amount", "transaction_time"]  # Replace with your actual column names
-    df_to_display = df[selected_columns]  # This line filters the DataFrame
+        st.write("Sample raw transaction_time values:")
+        st.write(df["transaction_time"].head(10))
 
-    st.dataframe(df_to_display, use_container_width=True)
+        # Fix timezone awareness: localize naive timestamps, convert others to UTC
+        if df["transaction_time"].dt.tz is None:
+            df["transaction_time"] = df["transaction_time"].dt.tz_localize('UTC')
+        else:
+            df["transaction_time"] = df["transaction_time"].dt.tz_convert('UTC')
 
+        st.write("Transaction time range in data:")
+        st.write(df["transaction_time"].min(), "to", df["transaction_time"].max())
 
-# --- AUTO-REFRESH LOOP ---
-# Wait and rerun the app
-REFRESH_INTERVAL_MS = REFRESH_INTERVAL_SEC * 1000
-st_autorefresh(interval=REFRESH_INTERVAL_MS, limit=None, key="datarefresh")
+        today = pd.Timestamp.now(tz='UTC')
+        week_ago = today - pd.Timedelta(days=7)
 
-#now it doesnt seem to be uodating in nrt??? to much data???
+        mask = (df["transaction_time"] >= week_ago) & (df["transaction_time"] <= today)
+        df_filtered = df.loc[mask]
+
+        if df_filtered.empty:
+            st.warning("⚠️ No transactions found in the last week.")
+        else:
+            df_filtered = df_filtered.sort_values("transaction_time", ascending=False).head(20)
+
+            st.write(f"🗓 Showing {len(df_filtered)} transactions from {week_ago.date()} to {today.date()}")
+
+            selected_columns = ["id", "amount", "transaction_time"]
+            df_to_display = df_filtered[selected_columns] if all(col in df_filtered.columns for col in selected_columns) else df_filtered
+
+            st.dataframe(df_to_display, use_container_width=True)
+
+    else:
+        st.warning("⚠️ 'transaction_time' column not found.")
+
+# --- LIVE CLOCK ---
+st.write("🕒 Last refresh:", time.strftime("%H:%M:%S"))
+
+# --- AUTO-REFRESH ---
+st_autorefresh(interval=REFRESH_INTERVAL_SEC * 1000, limit=None, key="datarefresh")
