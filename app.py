@@ -10,8 +10,8 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "paypal_webhooks"
-AMOUNT_FIELD = "amount"  # change if needed
-REFRESH_INTERVAL_SEC = 2
+AMOUNT_FIELD = "amount"
+REFRESH_INTERVAL_SEC = 0.5  # auto-refresh every 0.5 seconds
 
 # --- Supabase headers ---
 headers = {
@@ -40,41 +40,42 @@ def filter_outliers(df, field):
     iqr = q3 - q1
     lower = q1 - 1.5 * iqr
     upper = q3 + 1.5 * iqr
+    upperF = q3 + 17.5 * iqr
     inliers = df[(df[field] >= lower) & (df[field] <= upper)]
-    outliers = df[(df[field] < lower) | (df[field] > upper)]
+    outliers = df[(df[field] > upperF)]
     mean = inliers[field].mean()
     return outliers.head(20), mean
 
 # --- Page layout ---
 st.set_page_config(layout="wide")
-st.title("💳 PayPal Transaction Monitor")
-auto_refresh = st.checkbox("Auto-refresh every 2 seconds", value=True)
+st.title("Donation Intelligence Dashboard")
 
 # Define static column layout once
 col1, col2 = st.columns([1, 4])
 
-# Placeholders (for dynamic updating)
+# Placeholders
 with col1:
-    st.subheader("📊 Average Transaction (Excl. Outliers)")
+    st.subheader("Mean Donation Amount")
     metric_placeholder = st.empty()
 
 with col2:
-    st.subheader("⚠️ Potential Fraud: Outlier Transactions")
+    st.subheader("Potentially Fraudulent Donations")
     table_placeholder = st.empty()
 
 last_updated = st.empty()
 
 # --- Async updater ---
 async def update_dashboard():
-    while auto_refresh:
+    while True:
         df = fetch_transactions()
         outliers, mean_amount = filter_outliers(df, AMOUNT_FIELD)
 
         with metric_placeholder:
             if mean_amount is not None:
-                st.metric("Mean Amount", f"${mean_amount:,.2f}")
+                st.metric(label="USD", value=f"${mean_amount:,.2f}")
             else:
                 st.write("No valid transaction data.")
+
 
         with table_placeholder:
             st.dataframe(outliers, use_container_width=True)
@@ -83,13 +84,4 @@ async def update_dashboard():
         await asyncio.sleep(REFRESH_INTERVAL_SEC)
 
 # --- Run ---
-if auto_refresh:
-    asyncio.run(update_dashboard())
-else:
-    df = fetch_transactions()
-    outliers, mean_amount = filter_outliers(df, AMOUNT_FIELD)
-    with metric_placeholder:
-        st.metric("Mean Amount", f"${mean_amount:,.2f}" if mean_amount else "N/A")
-    with table_placeholder:
-        st.dataframe(outliers, use_container_width=True)
-    last_updated.markdown(f"Last updated: `{pd.Timestamp.now().strftime('%H:%M:%S')}`")
+asyncio.run(update_dashboard())
