@@ -1,14 +1,21 @@
+
 from fastapi import FastAPI, Request
 from supabase import create_client
 from dotenv import load_dotenv
 import os, json
 
+#imports^
+
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+#getting values from .env^
+
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 app = FastAPI()
+
+#?
 
 @app.post("/paypal/webhook")
 async def paypal_webhook(request: Request):
@@ -36,3 +43,7 @@ async def paypal_webhook(request: Request):
     }).execute()
 
     return {"status": "received"}
+
+#?^
+
+

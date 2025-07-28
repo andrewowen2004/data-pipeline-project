@@ -5,13 +5,14 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-# --- Load environment variables ---
+#imports^
+
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "paypal_webhooks"
 AMOUNT_FIELD = "amount"
-REFRESH_INTERVAL_SEC = 0.5  # auto-refresh every 0.5 seconds
+REFRESH_INTERVAL_SEC = 0.5 
 
 # --- Supabase headers ---
 headers = {
