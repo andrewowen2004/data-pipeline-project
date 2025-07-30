@@ -4,7 +4,7 @@ import requests
 import asyncio
 import os
 from dotenv import load_dotenv
-
+from pathlib import Path
 #imports^
 
 load_dotenv()
