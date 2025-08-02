@@ -5,16 +5,17 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-#imports^
+#imports
 
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+#getting values from .env
+
 TABLE_NAME = "paypal_webhooks"
 AMOUNT_FIELD = "amount"
 REFRESH_INTERVAL_SEC = 0.5 
 
-# --- Supabase headers ---
 headers = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",

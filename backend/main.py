@@ -3,48 +3,40 @@ from fastapi import FastAPI, Request
 from supabase import create_client
 from dotenv import load_dotenv
 import os, json
-
-#imports^
+#imports
 
 load_dotenv()
-#print(os.getenv("SUPABASE_URL"))
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
-#getting values from .env^
+#getting values from .env
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+#creates connection to supabase db 
+
 app = FastAPI()
+#creates an instance of the FastAPI framework
 
-#?
-
-@app.post("/paypal/webhook")
+@app.post("/paypal/webhook") #when our server recieves a post request from the argument url the function below is executed
 async def paypal_webhook(request: Request):
-    payload = await request.json()
-    print("Webhook payload received:")
-    print(json.dumps(payload, indent=2))
+    payload = await request.json() #payload is equal to the payment request 
 
-    resource = payload.get("resource", {})
+    resource = payload.get("resource", {}) #gets the values at the dictionary key resource and sets them equal to a local resource value
+    
+    transaction_time = resource.get("create_time") #gets time from resource dictionary and sets to transaction_time as a "string"
+    amount_str = resource.get("amount", {}).get("value") #gets amount from resource dictionary and sets to amount as a "string"
 
-    # Extract amount and convert safely
-    amount_str = resource.get("amount", {}).get("value")
     try:
         amount = float(amount_str) if amount_str is not None else None
     except (ValueError, TypeError):
         amount = None
-
-    currency = resource.get("amount", {}).get("currency_code")
-    transaction_time = resource.get("create_time")
-
-    print(f"Parsed amount: {amount}, currency: {currency}, transaction_time: {transaction_time}")
+    #converts amount from s string to a float and if conversion returns an error the except sets amount to None
 
     supabase.table("paypal_webhooks").insert({
         "amount": amount,
         "transaction_time": transaction_time,
     }).execute()
+    #inserts amount and trans time into my supabase db whenever the webhook is triggered
 
     return {"status": "received"}
-
-#?^
 
 
