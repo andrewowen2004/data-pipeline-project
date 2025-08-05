@@ -1,6 +1,6 @@
 # Real Time Fraud Detection Pipeline
 
-> This pipeline ingests donations through the PayPal SDK and flags potentially fraudulent transactions in real time on a monitoring dashboard.
+> This pipeline ingests donations and flags potentially fraudulent transactions in real time on a monitoring dashboard.
 
 ---
 
@@ -23,23 +23,29 @@ Example:
 
 ## Why?
 
-- ✅ Feature 1
-- ✅ Feature 2
-- 🚧 Feature 3 (coming soon)
+I strongly believe in the power of generosity and the importance of enabling people to give back. That’s why it's equally critical to protect against misuse—such as the example below. This project aims to detect and prevent misuse in quickly, preserving trust in donation programs.
 
+https://www.cbsnews.com/sanfrancisco/news/apple-6-former-employees-accused-charity-scam/
 ---
 
 ## How?
 
-List all technologies used:
+**Technologies used:**
 
-- **Frontend:** React / HTML / Tailwind
-- **Backend:** FastAPI / Node.js / Flask
-- **Database:** PostgreSQL / Supabase / MySQL
-- **ML/Analytics:** Python / Pandas / scikit-learn / Matplotlib
-- **Hosting:** Vercel / Heroku / Streamlit Cloud
+- **Frontend:** Streamlit (Python-based UI)
+- **Backend:** FastAPI (for webhook handling and API integration)
+- **Database:** Supabase (PostgreSQL-based real-time database)
+- **ML/Analytics:** Python / Pandas / Matplotlib
+- **Hosting:** Streamlit Cloud / Supabase Hosting
 
 ---
+
+Incoming donation data is captured in real-time using a **FastAPI webhook**. When a transaction is made, the webhook receives the payload and stores it in a **Supabase database**, enabling low-latency ingestion.
+
+Our **Streamlit dashboard** continuously polls the Supabase database at short intervals, retrieving the latest donations. The dashboard then processes the data using **Pandas**, flags potentially fraudulent donations, and computes summary statistics like the **mean donation amount**. These insights are visualized using **Matplotlib** and displayed on a live monitoring interface built entirely with **Streamlit**.
+
+This system enables near real-time fraud detection and donation analysis with minimal latency between ingestion and visualization.
+
 
 ## 📬 Contact
 
