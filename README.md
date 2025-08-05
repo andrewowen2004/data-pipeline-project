@@ -1,5 +1,7 @@
 # Real Time Fraud Detection Pipeline
 
+## [Project Video](https://linkedin.com/in/yourprofile)
+
 > This pipeline ingests donations and flags potentially fraudulent transactions in real time on a monitoring dashboard.
 
 ---
@@ -32,4 +34,4 @@ This system enables near real-time fraud detection and donation analysis with mi
 
 Created by [Andrew Owen](https://github.com/yourusername)  
 Email: ao9@iu.edu
-LinkedIn: [Connect](https://linkedin.com/in/yourprofile)
+LinkedIN: [Connect](https://linkedin.com/in/yourprofile)
