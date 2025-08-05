@@ -32,4 +32,4 @@ This system enables near real-time fraud detection and donation analysis with mi
 
 Created by [Andrew Owen](https://github.com/yourusername)  
 Email: ao9@iu.edu
-[LinkedIn](https://linkedin.com/in/yourprofile)
+LinkedIn: [Connect](https://linkedin.com/in/yourprofile)
