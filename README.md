@@ -2,16 +2,19 @@
 
 ## [Project Video](https://linkedin.com/in/yourprofile)
 
-This pipeline ingests donations and displays potentially fraudulent transactions in real time on a dashboard.
+
+This pipeline ingests donations and displays potentially fraudulent transactions on a real-time dashboard.
 
 ---
 
 ## Why?
 
-I strongly believe in the power of generosity and the importance of enabling people to give back. That’s why it's equally critical to protect against misuse—such as the example below. This project aims to detect and prevent misuse in quickly, preserving trust in donation programs.
+I strongly believe in the power of generosity and the importance of enabling people to give back. That’s why it's equally critical to protect against misuse—such as the example below. This project aims to detect and prevent misuse quickly, preserving security in digital donation platforms.
 
 Example:
 > https://www.cbsnews.com/sanfrancisco/news/apple-6-former-employees-accused-charity-scam/
+
+---
 
 ## How?
 
