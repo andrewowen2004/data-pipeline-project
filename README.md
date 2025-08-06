@@ -2,7 +2,8 @@
 
 ## [Project Video](https://linkedin.com/in/yourprofile)
 
-> This pipeline ingests donations and flags potentially fraudulent transactions in real time on a monitoring dashboard.
+
+> This pipeline ingests donations and displays potentially fraudulent transactions in real time on a dashboard.
 
 ---
 
