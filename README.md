@@ -1,6 +1,6 @@
 # Real Time Fraud Detection Pipeline
 
-## [Project Video](https://linkedin.com/in/yourprofile)
+## [Project Video](www.linkedin.com/in/andrewowen2027)
 
 
 This pipeline ingests donations and displays potentially fraudulent transactions on a real-time dashboard.
@@ -9,9 +9,9 @@ This pipeline ingests donations and displays potentially fraudulent transactions
 
 ## Why?
 
-I strongly believe in the power of generosity and the importance of enabling people to give back. That’s why it's equally critical to protect against misuse—such as the example below. This project aims to detect and prevent misuse quickly, preserving security in digital donation platforms.
+I strongly believe in the power of generosity and the importance of enabling people to give back. That’s why it's equally critical to protect against misuse, such as the example below. This project aims to detect and prevent misuse quickly, preserving security in digital donation platforms.
 
-Example:
+Example misuse:
 > https://www.cbsnews.com/sanfrancisco/news/apple-6-former-employees-accused-charity-scam/
 
 ---
@@ -26,15 +26,21 @@ Example:
 - **Database:** Supabase (PostgreSQL)
 - **Analytics:** Pandas / Matplotlib
 
+
+A user initiates a donation on the frontend via the PayPal SDK.
+
+Upon successful payment to a specific PayPal account, PayPal's servers automatically send a webhook—a POST request containing the donation details—to a public URL managed by ngrok.
+
+Ngrok securely tunnels this request to the FastAPI backend. The application receives the webhook data and immediately inserts it into a Supabase database.
+
+A separate Streamlit application functions as the monitoring dashboard. It continuously polls the Supabase database at frequent intervals. When it detects a new entry, it filters the data to identify suspicous donations and updates the dashboard, creating a near real-time display.
+
+This entire process creates a seamless flow from a one-time user action to a persistent and dynamically updated administrative view.
+
 ---
-
-Incoming donation data is captured in real-time using a **FastAPI webhook**. When a transaction is made, the webhook receives the payload and stores it in a **Supabase database**, enabling low-latency ingestion.
-
-This system enables near real-time fraud detection and donation analysis with minimal latency between ingestion and visualization.
-
 
 ## Contact Me
 
-Created by [Andrew Owen](https://github.com/yourusername)  
+Created by [Andrew Owen](www.linkedin.com/in/andrewowen2027)  
 Email: ao9@iu.edu
-LinkedIN: [Connect](https://linkedin.com/in/yourprofile)
+LinkedIN: [Connect](www.linkedin.com/in/andrewowen2027)
